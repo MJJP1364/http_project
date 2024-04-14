@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 
       // ),
 
-      home: const TodoListPage(),
+      home: TodoListPage(),
     );
   }
 }

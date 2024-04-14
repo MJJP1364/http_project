@@ -6,11 +6,11 @@ import 'package:http_project/MyApp/Controllers/add_page_controller.dart';
 import 'Widgets/input_text.dart';
 
 class AddPage extends StatelessWidget {
-  const AddPage({super.key});
+  AddPage({super.key});
 
+  final controller = Get.put(HttpPageController());
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddPageController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[800],
