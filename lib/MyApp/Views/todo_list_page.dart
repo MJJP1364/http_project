@@ -23,37 +23,92 @@ class TodoListPage extends StatelessWidget {
             // ignore: unrelated_type_equality_checks
             getAllDataController.isLoading == true
                 ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                    onRefresh: getAllDataController.getAllData,
-                    child: ListView.builder(
-                      itemCount: getAllDataController.items.length,
-                      itemBuilder: (context, index) {
-                        final items = getAllDataController.items[index];
-                        return Card(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                ' ${index + 1}',
-                                style: const TextStyle(fontSize: 25),
+                : getAllDataController.items.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No data',
+                          style: TextStyle(fontSize: 35),
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: getAllDataController.getAllData,
+                        child: ListView.builder(
+                          itemCount: getAllDataController.items.length,
+                          itemBuilder: (context, index) {
+                            final items = getAllDataController.items[index];
+                            final id = items['_id'] as String;
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            ' ${index + 1}',
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 15),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            items['title'],
+                                            style:
+                                                const TextStyle(fontSize: 25),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            items['description'],
+                                            style:
+                                                const TextStyle(fontSize: 25),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(child: Container()),
+                                      PopupMenuButton(
+                                        onSelected: (value) {
+                                          if (value == 'Edit') {
+                                            // getAllDataController.editById(id);
+                                          } else if (value == 'Delete') {
+                                            getAllDataController.deleteById(id);
+                                          }
+                                        },
+                                        itemBuilder: (context) {
+                                          return [
+                                            const PopupMenuItem(
+                                              value: 'Edit',
+                                              child: Text('Edit'),
+                                              // onTap: () {},
+                                            ),
+                                            const PopupMenuItem(
+                                              value: 'Delete',
+                                              child: Text('Delete'),
+                                              // onTap: () {},
+                                            ),
+                                          ];
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 15),
-                              Text(
-                                items['title'],
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                              const SizedBox(width: 20),
-                              Text(
-                                items['description'],
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                            );
+                          },
+                        ),
+                      );
       }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.to(

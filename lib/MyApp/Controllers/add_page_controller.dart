@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../Views/todo_list_page.dart';
+
 class HttpPageController extends GetxController {
   @override
   void onInit() {
@@ -37,10 +39,11 @@ class HttpPageController extends GetxController {
       titleController.text = '';
       descriptionController.text = '';
       // print('Creation success');
-      // getAllData();
+      getAllData();
       Get.snackbar('Send Data', 'Creation success',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green.withOpacity(0.6));
+      Get.to(() => TodoListPage());
     } else {
       // print('Creation Failed');
       // print(response.body);
@@ -66,6 +69,28 @@ class HttpPageController extends GetxController {
       }
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteById(String id) async {
+    // Delete the item
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final response = await http.delete(uri);
+    try {
+      if (response.statusCode == 200) {
+        // delete from List
+        final deleteItem =
+            items.where((element) => element['_id'] != id).toList();
+        items.value = deleteItem;
+        Get.snackbar('Delete Data', 'data hase been deleted',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green.withOpacity(0.6));
+      }
+    } catch (e) {
+      Get.snackbar('Delete Data', 'data failed deleted',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withOpacity(0.6));
     }
   }
 }
