@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http_project/MyApp/Views/add_page.dart';
+import 'package:http_project/MyApp/Views/edit_page.dart';
 
 import '../Controllers/add_page_controller.dart';
 
@@ -37,6 +38,9 @@ class TodoListPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final items = getAllDataController.items[index];
                             final id = items['_id'] as String;
+                            final title = items['title'] as String;
+                            final description = items['description'] as String;
+
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Card(
@@ -81,7 +85,18 @@ class TodoListPage extends StatelessWidget {
                                       PopupMenuButton(
                                         onSelected: (value) {
                                           if (value == 'Edit') {
-                                            // getAllDataController.editById(id);
+                                            Get.to(
+                                              () => EditPage(),
+                                              
+                                              arguments: {
+                                                'id': id,
+                                                'title': title,
+                                                'description': description,
+                                              },
+                                              duration: const Duration(
+                                                  milliseconds: 800),
+                                              transition: Transition.fadeIn,
+                                            );
                                           } else if (value == 'Delete') {
                                             getAllDataController.deleteById(id);
                                           }
@@ -91,12 +106,10 @@ class TodoListPage extends StatelessWidget {
                                             const PopupMenuItem(
                                               value: 'Edit',
                                               child: Text('Edit'),
-                                              // onTap: () {},
                                             ),
                                             const PopupMenuItem(
                                               value: 'Delete',
                                               child: Text('Delete'),
-                                              // onTap: () {},
                                             ),
                                           ];
                                         },
